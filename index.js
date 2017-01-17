@@ -1,4 +1,4 @@
-const request = require('request-promise')
+const request = require('requestretry')
 const parse = require('csv-parse')
 const fs = require('fs')
 
@@ -6,6 +6,9 @@ const fs = require('fs')
 function create_request_options(screenname) {
   let options = { method: 'POST',
   url: 'https://app.receptiviti.com/v2/api/import/twitter/user',
+  fullResponse: false,
+  maxAttempts: 5, // (default) try 5 times
+  retryDelay: 2000, // (default) wait for 5s before trying again
   headers:
    {
      'cache-control': 'no-cache',
@@ -23,6 +26,9 @@ function create_request_options(screenname) {
 function get_finished_options(operationid) {
   let options = { method: 'GET',
   url: 'https://app.receptiviti.com/v2/api/import/twitter/requests/'+operationid+'/people',
+  fullResponse: false,
+  maxAttempts: 5, // (default) try 5 times
+  retryDelay: 2000, // (default) wait for 5s before trying again
   headers:
    {
      'cache-control': 'no-cache',
@@ -43,6 +49,7 @@ const parser = parse({delimter: ':'}, function(err,data){
 fs.createReadStream(__dirname+'/data.csv')
   .pipe(parser)
 
+//parse people
 function parse_people(data){
   let people = [];
   data.forEach(person => {
@@ -54,6 +61,8 @@ function parse_people(data){
 }
 
 function fetch_receptivity(people){
+
+  //request information
   let fetches = []
   people.forEach(person => fetches.push(request(create_request_options(person.twitter))))
 
@@ -68,9 +77,11 @@ function fetch_receptivity(people){
 
     }
 
-    console.log('percentage fetched: '+(x/people.length*100)+'%')
+    console.log('percentage processed by receptiviti: '+(x/people.length*100)+'%')
+    console.log('now fetching from '+x+' people')
     return result;
   })
+  //fetch the data of processed people
   .then(people => {
     let fetches = []
     people.forEach(person => fetches.push(request(get_finished_options(person.id))))
@@ -83,8 +94,10 @@ function fetch_receptivity(people){
       return result
     })
   })
+  //write to the results.json file
   .then(result => {
     fs.writeFile('./result.json', JSON.stringify(result, null, 2), 'utf-8')
+    console.log('done')
   })
 }
 
