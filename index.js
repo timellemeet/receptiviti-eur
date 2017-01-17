@@ -80,7 +80,11 @@ function fetch_receptivity(people){
       return result
     })
   })
-  .then(data => console.log(data))
+  .then(result => {
+    fs.writeFile('./result.json', JSON.stringify(result, null, 2), 'utf-8')
+  })
 }
+
+
 
 
