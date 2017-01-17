@@ -96,8 +96,10 @@ function fetch_receptivity(people){
   })
   //write to the results.json file
   .then(result => {
-    fs.writeFile('./result.json', JSON.stringify(result, null, 2), 'utf-8')
-    console.log('done')
+    fs.writeFile('./result.json', JSON.stringify(result, null, 2), 'utf-8', err => {
+      if(err) reject (err);
+      else console.log('done')
+    })
   })
 }
 
