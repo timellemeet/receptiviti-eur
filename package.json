@@ -1,0 +1,24 @@
+{
+  "name": "receptiviti-eur",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timellemeet/receptiviti-eur.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/timellemeet/receptiviti-eur/issues"
+  },
+  "homepage": "https://github.com/timellemeet/receptiviti-eur#readme",
+  "dependencies": {
+    "csv-parse": "1.1.9",
+    "request": "2.79.0",
+    "request-promise": "4.1.1"
+  }
+}
