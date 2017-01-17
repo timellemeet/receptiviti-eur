@@ -21,7 +21,7 @@ function create_request_options(screenname) {
 
 //request options
 function get_finished_options(operationid) {
-  return options = { method: 'GET',
+  let options = { method: 'GET',
   url: 'https://app.receptiviti.com/v2/api/import/twitter/requests/'+operationid+'/people',
   headers:
    {
@@ -30,6 +30,7 @@ function get_finished_options(operationid) {
      'x-api-key': '58739637412cee05ed8fd5d8',
      'content-type': 'application/json' },
   json: true };
+  return options
 }
 
 //csv parse function
@@ -53,13 +54,33 @@ function fetch_receptivity(people){
   let fetches = []
   people.forEach(person => fetches.push(request(create_request_options(person.twitter))))
 
-  Promise.all(fetches).then(values => {
+  return Promise.all(fetches).then(values => {
     let result = [];
+    let x = 0
     for(let i = 0; i<people.length;i++){
-      result.push({name: people[i], data: values[i]})
+      if(values[i].status == "Finished"){
+        x++;
+        result.push({name: people[i].name, id: values[i]._id})
+      }
+
     }
+
+    console.log('percentage fetched: '+(x/people.length*100)+'%')
     return result;
+  })
+  .then(people => {
+    let fetches = []
+    people.forEach(person => fetches.push(request(get_finished_options(person.id))))
+
+    return Promise.all(fetches).then(data => {
+      let result = []
+      for(let i = 0; i<data.length;i++){
+        result.push({name:people[i].name, data: data[i][0]})
+      }
+      return result
+    })
   })
   .then(data => console.log(data))
 }
+
 
