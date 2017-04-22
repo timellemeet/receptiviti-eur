@@ -53,8 +53,8 @@ fs.createReadStream(__dirname+'/data.csv')
 function parse_people(data){
   let people = [];
   data.forEach(person => {
-    if(person[6]){
-    people.push({name: person[0], twitter:person[6].substring(person[6].lastIndexOf("/")+1)})
+    if(person[12]){
+    people.push({name: person[0], twitter:person[12].substring(person[12].lastIndexOf("/")+1)})
   }
   })
   return people
