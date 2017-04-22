@@ -51,6 +51,7 @@ fs.createReadStream(__dirname+'/data.csv')
 
 //parse people
 function parse_people(data){
+  console.log(data)
   let people = [];
   data.forEach(person => {
     if(person[12]){
