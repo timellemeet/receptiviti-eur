@@ -40,7 +40,7 @@ function get_finished_options(operationid) {
 }
 
 //csv parse function
-const parser = parse({}, function(err,data){
+const parser = parse(({delimiter: ','}, function(err,data){
   console.log(data)
   let people = parse_people(data)
   fetch_receptivity(people)
