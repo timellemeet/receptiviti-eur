@@ -85,7 +85,7 @@ function fetch_receptivity(people){
   .then(people => {
     let fetches = []
     people.forEach(person => fetches.push(request(get_finished_options(person.id))))
-
+  console.log(people)
     return Promise.all(fetches).then(data => {
       let result = []
       console.log(data)
