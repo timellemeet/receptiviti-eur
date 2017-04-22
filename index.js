@@ -88,7 +88,9 @@ function fetch_receptivity(people){
 
     return Promise.all(fetches).then(data => {
       let result = []
+      console.log(data)
       for(let i = 0; i<data.length;i++){
+        
         result.push({name:people[i].name, data: data[i][0]})
       }
       return result
